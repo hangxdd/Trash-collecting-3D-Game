@@ -20,6 +20,12 @@ floor = vizshape.addPlane(size=(20, 20), axis=vizshape.AXIS_Y, cullFace=False)
 floor.setPosition(0, -22.5, 0)
 floor.alpha(0.2)
 
+# Importēt trashcan.obj modeli
+trashcan = viz.add('trashcan.obj')
+trashcan.setPosition(-3, -22, 1)
+trashcan.setEuler([0, 90, 180])
+trashcan.setScale(0.075, 0.075, 0.075)
+
 # Spēlētāju punkti
 player_scores = [0, 0]
 current_player = 0
@@ -121,7 +127,7 @@ viz.callback(viz.MOUSEDOWN_EVENT, onMouseDown)
 viz.callback(viz.MOUSEUP_EVENT, onMouseUp)
 
 # Fiksēt spēlētāja pozīciju un uzstādīt sākotnējo skatīšanās virzienu
-fixed_position = [0, -20, 12.5]  # Move the player's fixed position down
+fixed_position = [0, -19.5, 12.5]  # Move the player's fixed position down
 initial_euler = [180, 0, 0]  # Adjust these values as needed to face the correct direction
 viz.MainView.setPosition(fixed_position)
 viz.MainView.setEuler(initial_euler)
