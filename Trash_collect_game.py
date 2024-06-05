@@ -6,14 +6,18 @@ import time
 # Inicializē Vizard vidi
 viz.go()
 
-# Uzstādīt fona krāsu
-sky = viz.add(viz.ENVIRONMENT_MAP, 'sky.jpg')
-skybox = viz.add('skydome.dlc')
+# Uzstādīt fona krāsu ar vienu attēlu
+sky = viz.addTexture('house_interior.jpg')
+skybox = vizshape.addSphere(radius=50, slices=50, stacks=50, cullFace=False)
 skybox.texture(sky)
+skybox.setScale([-1, 1, 1])  # Invert the sphere so the texture is inside
 
-# Izveidot grīdu
+# Adjust texture scale
+skybox.texmat(viz.Matrix.scale(1.5, 1.5, 1.5))  # Adjust the scale values as needed
+
+# Izveidot grīdu un uzstādīt koka tekstūru
 floor = vizshape.addPlane(size=(20, 20), axis=vizshape.AXIS_Y, cullFace=False)
-floor.setPosition(0, 0, 0)
+floor.setPosition(0, -22.5, 0)
 floor.alpha(0.2)
 
 # Spēlētāju punkti
@@ -87,7 +91,7 @@ def check_time():
 def reset_game():
     global player_scores
     player_scores[1] = 0
-    viz.MainView.setPosition(0, 1.8, 10)
+    viz.MainView.setPosition(0, -3.2, 10)  # Move the player's initial position down
     viz.MainView.setEuler(0, 0, 0)
     update_score()
 
@@ -117,7 +121,7 @@ viz.callback(viz.MOUSEDOWN_EVENT, onMouseDown)
 viz.callback(viz.MOUSEUP_EVENT, onMouseUp)
 
 # Fiksēt spēlētāja pozīciju un uzstādīt sākotnējo skatīšanās virzienu
-fixed_position = [0, 1.8, 12.5]
+fixed_position = [0, -20, 12.5]  # Move the player's fixed position down
 initial_euler = [180, 0, 0]  # Adjust these values as needed to face the correct direction
 viz.MainView.setPosition(fixed_position)
 viz.MainView.setEuler(initial_euler)
