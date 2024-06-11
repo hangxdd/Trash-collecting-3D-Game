@@ -16,6 +16,7 @@ In the game the user is supposed to collect trash crates and put them into the r
 There's an arrow which's position you can control with your mouse and it's scrollwheel.
 You need the arrow's position to be on the crate, then hold left click to pickup the crate, drag it into the recycling bin and let go of the left click,
 Congrats! You successfully recycled a crate.
+If you need to you can move around using keyboard keys WASD.
 
 ### Technologies used
 > Vizard 7, Tinkercad
