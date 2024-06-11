@@ -10,7 +10,7 @@ viz.setMultiSample(4)
 viz.fov(60)
 viz.go()
 
-# Load scene and models
+# Ielādē ainu un modeļus
 piazza = viz.add('piazza.osgb')
 trashcan = viz.add('trashcan.obj')
 trashcan.setPosition(0.45, 0.05, 2.80)
@@ -18,7 +18,7 @@ trashcan.setEuler([0, 90, 180])
 trashcan.setScale(0.035, 0.035, 0.035)
 arrow = viz.addChild('arrow.wrl', scale=[0.3, 0.3, 0.3])
 
-# Enable physics
+# Aktivizē fiziku
 viz.phys.enable()
 piazza.collideMesh()
 trashcan.collideMesh()
@@ -26,7 +26,7 @@ arrow.collideBox()
 arrow.disable(viz.DYNAMICS)
 arrow.disable(viz.PHYSICS)
 
-# Link arrow to mousetracker
+# Sasaisti arrow ar peles izsekošanu
 viewTracker = viztracker.Keyboard6DOF()
 viewlink = viz.link(viewTracker, viz.MainView)
 viewlink.preTrans([0, 1.5, 0])
@@ -35,37 +35,37 @@ trackerlink = viz.link(tracker, arrow)
 trackerlink.postTrans([0, 0, -5])
 closest = None
 
-# Player scores and logic
+# Spēlētāju punkti un loģika
 player_scores = [0, 0]
 current_player = 0
-game_duration = 30  # seconds
+game_duration = 30  # sekundes
 start_time = time.time()
 
-# Score and timer display
+# Punktu un taimeru displejs
 score_text = viz.addText(f'Score: 0', viz.SCREEN, pos=[0.1, 0.9, 0])
 score_text.fontSize(24)
 time_text = viz.addText(f'Time: {game_duration}', viz.SCREEN, pos=[0.1, 0.8, 0])
 time_text.fontSize(24)
 
-# Get player names
+# Iegūst spēlētāju vārdus
 player_names = [viz.input('Enter Player 1 name:'), viz.input('Enter Player 2 name:')]
 
-# Player turn indicator
+# Spēlētāja kārtas indikators
 turn_indicator = viz.addText(f"Turn: {player_names[current_player]}", viz.SCREEN, pos=[0.1, 0.7, 0])
 turn_indicator.fontSize(24)
 
-# Update the turn indicator
+# Atjaunina kārtas indikatoru
 def update_turn_indicator():
     turn_indicator.message(f"Player's turn: {player_names[current_player]}")
 
-# Update score display
+# Atjaunina punktu displeju
 def update_score():
     score_text.message(f'Score: {player_scores[current_player]}')
 
-# Reset game for next player
+# Atiestata spēli nākamajam spēlētājam
 def reset_game():
     global player_scores, crates
-    # Remove existing crates
+    # Noņem esošās kastes
     for crate in crates:
         crate.remove()
     crates = []
@@ -74,7 +74,7 @@ def reset_game():
     viz.MainView.setEuler(0, 0, 0)
     update_score()
 
-# Check game time with warning
+# Pārbauda spēles laiku ar brīdinājumu
 warning_threshold = 10
 
 def check_time():
@@ -84,9 +84,9 @@ def check_time():
     time_text.message(f"Time: {remaining_time}")
     
     if remaining_time <= warning_threshold:
-        time_text.color(viz.RED)  # Change text color to red for warning
+        time_text.color(viz.RED)  # Maina teksta krāsu uz sarkanu brīdinājumam
     else:
-        time_text.color(viz.WHITE)  # Default text color
+        time_text.color(viz.WHITE)  # Noklusētā teksta krāsa
     
     if remaining_time <= 0:
         current_player = (current_player + 1) % 2
@@ -100,12 +100,12 @@ def check_time():
             reset_game()
         update_turn_indicator()
 
-# Initial update of the turn indicator
+# Sākotnējā kārtas indikatora atjaunināšana
 update_turn_indicator()
 
 vizact.ontimer(1, check_time)
 
-# Fix player position
+# Fiksē spēlētāja pozīciju
 fixed_position = [0, 1.5, 5]
 initial_euler = [0, 0, 0]
 viz.MainView.setPosition(fixed_position)
@@ -116,7 +116,7 @@ def lock_position():
 
 vizact.ontimer(0, lock_position)
 
-# Closest object update
+# Atjaunina tuvāko objektu
 def updateClosest():
     global closest
     list = viz.phys.intersectNode(arrow)
@@ -138,40 +138,40 @@ vizact.onupdate(viz.PRIORITY_DEFAULT, updateClosest)
 link = None
 grabbedObject = None
 
-# Define crate sizes and their point values
+# Definē kastes izmērus un to punktu vērtības
 crate_sizes = [
     ([0.2, 0.2, 0.2], 5),
     ([0.4, 0.4, 0.4], 10),
     ([0.6, 0.6, 0.6], 15)
 ]
 
-# Function to create crates with positions to the sides of the trashcan and not inside it
+# Funkcija, lai izveidotu kastes pozīcijās blakus atkritumu tvertnei un ne tās iekšpusē
 def create_crates():
     global crates
     trashcan_pos = trashcan.getPosition()
-    min_distance = 0.5  # Minimum distance from the trashcan to avoid spawning inside it
+    min_distance = 1  # Minimālais attālums no atkritumu tvertnes, lai izvairītos no iekšpusē izspaušanas
 
     for _ in range(3):
         while True:
-            x = random.uniform(-1.5, 2.4)  # x position around the trashcan
+            x = random.uniform(-3, 4)  # x pozīcija ap atkritumu tvertni
             y = 0.3
-            z = random.uniform(2.6, 3.0)  # z position constant or slightly varying around 2.8
+            z = random.uniform(2.6, 5.0)  # z pozīcija konstanta vai nedaudz mainīga ap 2.8
             distance = vizmat.Distance([x, y, z], trashcan_pos)
             if distance >= min_distance:
                 break
         size, points = random.choice(crate_sizes)
         crate = viz.addChild('crate.osgb', pos=[x, y, z], scale=size)
         crate.collideBox()
-        crate.points = points  # Assign point value to the crate
+        crate.points = points  # Piešķir punktu vērtību kastei
         crates.append(crate)
 
-# Initialize crates list
+# Inicializē kastes sarakstu
 crates = []
 
-# Create initial crates
+# Izveido sākotnējās kastes
 create_crates()
 
-# Add sound effects
+# Pievieno skaņas efektus
 grab_sound = viz.addAudio('grab.mp3')
 dispose_sound = viz.addAudio('dispose.mp3')
 
@@ -195,16 +195,16 @@ def onMouseUp():
             grabbedObject.disable(viz.PHYSICS)
             grabbedObject.remove()
             crates.remove(grabbedObject)
-            player_scores[current_player] += grabbedObject.points  # Use the point value assigned to the crate
+            player_scores[current_player] += grabbedObject.points  # Izmanto punktu vērtību, kas piešķirta kastei
             update_score()
-            dispose_sound.play()  # Play dispose sound
-            if not crates:  # Check if all crates are disposed
-                create_crates()  # Create new crates
+            dispose_sound.play()  # Atskaņo utilizācijas skaņu
+            if not crates:  # Pārbauda, vai visas kastes ir utilizētas
+                create_crates()  # Izveido jaunas kastes
         grabbedObject = None
 
 vizact.onmousedown(viz.MOUSEBUTTON_LEFT, onMouseDown)
 vizact.onmouseup(viz.MOUSEBUTTON_LEFT, onMouseUp)
 
-# Ensure main logic runs
+# Nodrošina, ka galvenā loģika darbojas
 if __name__ == "__main__":
     viz.go()
