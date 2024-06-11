@@ -19,4 +19,4 @@ Congrats! You successfully recycled a crate.
 If you need to you can move around using keyboard keys WASD.
 
 ### Technologies used
-> Vizard 7, Tinkercad
+> Vizard 7, Tinkercad.com
